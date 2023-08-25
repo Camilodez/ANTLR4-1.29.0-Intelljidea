@@ -77,11 +77,12 @@ logical_condition: '(' logical_condition ')'
 ;
 
 
+
 // Regla para sentencias 'si' y 'sino'
 si: 'si';
 sino: 'sino';
-if_statement: '\n'si' ' logical_condition  block
-|  '\n'si' '  logical_condition  block ' 'sino' ' block;
+if_statement: '\n'si logical_condition block
+| '\n'si logical_condition block '\n'sino block;
 
 //Proceso de anidación
 block: '{' statement_list'}';
