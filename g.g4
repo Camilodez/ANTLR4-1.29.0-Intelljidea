@@ -95,5 +95,6 @@ while_loop: 'mientras' expression ':' block;
 
 // Identificación de las sentencias
 
+
 // Regla raíz
 program: statement+;
