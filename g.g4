@@ -5,9 +5,11 @@ VARIABLE: LETRA (LETRA | DIGITO)*;
 INT : DIGITO+;
 BOOLEAN: 'verdadero' | 'falso';
 STRING : '"' (~["\r\n] | '\\\\' . | '\\"')* '"';
-
 FLOAT: DIGITO+ '.' DIGITO+;
 ASSIGN: '=';
+
+// Regla de ignoro
+BLANCO: [ \t\r\n] -> skip;
 
 // Reglas de tipo
 type: 'booleano' | 'entero' | 'decimal' | 'cadena';
@@ -16,11 +18,10 @@ type: 'booleano' | 'entero' | 'decimal' | 'cadena';
 statement : simple_statement
 ;
 
-simple_statement : type ' ' VARIABLE ASSIGN (STRING | INT | BOOLEAN | FLOAT) ';'
+simple_statement : type VARIABLE ASSIGN (STRING | INT | BOOLEAN | FLOAT) ';'
 | if_statement
 | while_loop
-| 'escribe ' expression ';';
-
+| 'escribe' expression ';';
 
 
 primary_expression : INT | STRING | BOOLEAN | FLOAT | VARIABLE ;
@@ -57,6 +58,7 @@ expression: '(' expression ')'
 | STRING
 | BOOLEAN
 | VARIABLE
+| logical_condition
 ;
 
 // Regla para condiciones lógicas
@@ -68,12 +70,12 @@ and: '&&';
 or: '||';
 logical_condition: '(' logical_condition ')'
 | BOOLEAN
-| '(' VARIABLE ' 'mayor' ' (INT | FLOAT) ')'
-| '(' VARIABLE ' 'menor' ' (INT | FLOAT) ')'
-| '(' VARIABLE ' 'igual' ' (INT | FLOAT | STRING | BOOLEAN) ')'
-| '(' VARIABLE ' 'diferente' ' (INT | FLOAT | STRING | BOOLEAN) ')'
-| logical_condition ' 'and' ' logical_condition
-| logical_condition ' 'or' ' logical_condition
+| '(' VARIABLE mayor (INT | FLOAT | VARIABLE) ')'
+| '(' VARIABLE menor (INT | FLOAT| VARIABLE) ')'
+| '(' VARIABLE igual (INT | FLOAT | STRING | VARIABLE) ')'
+| '(' VARIABLE diferente (INT | FLOAT | STRING | BOOLEAN | VARIABLE) ')'
+| logical_condition and logical_condition
+| logical_condition or logical_condition
 ;
 
 
@@ -81,8 +83,9 @@ logical_condition: '(' logical_condition ')'
 // Regla para sentencias 'si' y 'sino'
 si: 'si';
 sino: 'sino';
-if_statement: '\n'si logical_condition block
-| '\n'si logical_condition block '\n'sino block;
+if_statement: si logical_condition block
+            | si logical_condition block sino block
+            ;
 
 //Proceso de anidación
 block: '{' statement_list'}';
@@ -91,7 +94,7 @@ statement_list: statement
 | statement_list statement;
 
 //Reglas gramaticales de mientras
-while_loop: 'mientras' expression ':' block;
+while_loop: 'mientras' expression block;
 
 // Identificación de las sentencias
 
