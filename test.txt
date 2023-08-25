@@ -1,1 +1,1 @@
-10+20*30
+entero dato1=3;entero dato2=4;si(dato1 == 4){Escribe"Esmayor";} sino {Escribe"Esmenor";}
