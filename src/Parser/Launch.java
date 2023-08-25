@@ -1,3 +1,6 @@
+package Parser;
+
+import Parser.MyVisitor;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
@@ -14,7 +17,7 @@ public class Launch {
             gLexer Lexer = new gLexer(cs);
             CommonTokenStream token = new CommonTokenStream(Lexer);
             gParser parser = new gParser(token);
-            ParseTree tree = parser.prog();
+            ParseTree tree = parser.program();
 
             MyVisitor visitor = new MyVisitor();
             visitor.visit(tree);
